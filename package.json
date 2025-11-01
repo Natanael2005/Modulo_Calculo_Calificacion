@@ -1,0 +1,26 @@
+{
+  "name": "modulo_calculo_calificacion",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Natanael2005/Modulo_Calculo_Calificacion.git"
+  },
+  "keywords": [],
+  "author": "Chan Uc Felipe Natanael",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Natanael2005/Modulo_Calculo_Calificacion/issues"
+  },
+  "homepage": "https://github.com/Natanael2005/Modulo_Calculo_Calificacion#readme",
+  "devDependencies": {
+    "jest": "^30.2.0"
+  }
+}
