@@ -1,46 +1,62 @@
+
 const { calcularCalificacionFinal } = require('../src/calcularCalificacionFinal');
 
-describe('calcularCalificacionFinal — Pruebas solicitadas', () => {
-//Aprobado
-
-  test('1) Aprobado: 8.25 a 8.3', () => {
+describe('calcularCalificacionFinal', () => {
+  test('Aprobado: 8.25 -> 8.3', () => {
     const n = calcularCalificacionFinal(8.5, 9.0, 7.5, 90, 0.3, 0.3, 0.4);
     expect(n).toBe(8.3);
   });
 
-//Reprobado por Asistencia 
-  test('2) Reprobado por Asistencia: 79% a 5.0', () => {
-    const n = calcularCalificacionFinal(10.0, 10.0, 10.0, 79, 0.3, 0.3, 0.4);
+  test('Reprobado por asistencia (<80% => 5.0)', () => {
+    const n = calcularCalificacionFinal(10, 10, 10, 79, 0.3, 0.3, 0.4);
     expect(n).toBe(5.0);
   });
 
-//Reprobado por Examen Final 
-  test('3) Reprobado por Examen Final: 5.9 a 5.0', () => {
-    const n = calcularCalificacionFinal(10.0, 10.0, 5.9, 100, 0.3, 0.3, 0.4);
+  test('Reprobado por examen (<6.0 => 5.0)', () => {
+    const n = calcularCalificacionFinal(10, 10, 5.9, 100, 0.3, 0.3, 0.4);
     expect(n).toBe(5.0);
   });
 
-//Reprobado por Calificación 
-  test('4) Reprobado por Calificación: resultado 6.4', () => {
+  test('Cálculo < 7.0 devuelve el valor calculado (6.4)', () => {
     const n = calcularCalificacionFinal(6.0, 6.0, 7.0, 85, 0.3, 0.3, 0.4);
     expect(n).toBe(6.4);
   });
 
-  
-  test('5) Error: Ponderación Inválida ', () => {
-    const n = calcularCalificacionFinal(8.0, 8.0, 8.0, 90, 0.3, 0.3, 0.3);
+  test('Error: ponderaciones != 1.0 => -1.0', () => {
+    const n = calcularCalificacionFinal(8, 8, 8, 90, 0.3, 0.3, 0.3);
     expect(n).toBe(-1.0);
   });
 
-//Calificación Fuera de Rango
-
-  test('6) Error: Calificación Fuera de Rango ', () => {
-    const n = calcularCalificacionFinal(11.0, 8.0, 8.0, 90, 0.3, 0.3, 0.4);
+  test('Error: fuera de rango => -1.0', () => {
+    const n = calcularCalificacionFinal(11, 8, 8, 90, 0.3, 0.3, 0.4);
     expect(n).toBe(-1.0);
   });
 
-  test('7) Caso Frontera Asistencia: 80% ', () => {
-    const n = calcularCalificacionFinal(10.0, 10.0, 10.0, 80, 0.3, 0.3, 0.4);
+  test('Frontera asistencia (=80% válido, todo 10 => 10.0)', () => {
+    const n = calcularCalificacionFinal(10, 10, 10, 80, 0.3, 0.3, 0.4);
     expect(n).toBe(10.0);
+  });
+
+  // Extras
+  test('Asistencia no entera (90.5) => -1.0', () => {
+    const n = calcularCalificacionFinal(8, 8, 8, 90.5, 0.3, 0.3, 0.4);
+    expect(n).toBe(-1.0);
+  });
+
+  test('Tolerancia flotante (0.1+0.2+0.7≈1.0) => 9.0', () => {
+    const n = calcularCalificacionFinal(9, 9, 9, 100, 0.1, 0.2, 0.7);
+    expect(n).toBe(9.0);
+  });
+
+  test('Orden de validaciones (ponderaciones inválidas => -1.0)', () => {
+    const n = calcularCalificacionFinal(10, 10, 10, 70, 0.5, 0.5, 0.2);
+    expect(n).toBe(-1.0);
+  });
+
+  test('Redondeo a 1 decimal (8.249→8.2, 8.251→8.3)', () => {
+    const a = calcularCalificacionFinal(8.249, 8.249, 8.249, 100, 1/3, 1/3, 1/3);
+    const b = calcularCalificacionFinal(8.251, 8.251, 8.251, 100, 1/3, 1/3, 1/3);
+    expect(a).toBe(8.2);
+    expect(b).toBe(8.3);
   });
 });
