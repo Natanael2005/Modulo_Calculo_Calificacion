@@ -7,46 +7,40 @@ function calcularCalificacionFinal(
   ponderacion_quizzes,
   ponderacion_examen_final
 ) {
-  const isFiniteNumber = (n) => typeof n === 'number' && Number.isFinite(n);
-  const inRangeInc = (n, min, max) => n >= min && n <= max;
-
-  const inputs = [
+  const vals = [
     promedio_tareas,
     promedio_quizzes,
     calificacion_examen_final,
     porcentaje_asistencia,
     ponderacion_tareas,
     ponderacion_quizzes,
-    ponderacion_examen_final,
+    ponderacion_examen_final
   ];
-  if (!inputs.every(isFiniteNumber)) return -1.0;
+  if (!vals.every(n => typeof n === 'number' && Number.isFinite(n))) return -1.0;
 
+  const between = (n, min, max) => n >= min && n <= max;
   if (
-    !inRangeInc(promedio_tareas, 0, 10) ||
-    !inRangeInc(promedio_quizzes, 0, 10) ||
-    !inRangeInc(calificacion_examen_final, 0, 10) ||
-    !inRangeInc(porcentaje_asistencia, 0, 100) ||
+    !between(promedio_tareas, 0, 10) ||
+    !between(promedio_quizzes, 0, 10) ||
+    !between(calificacion_examen_final, 0, 10) ||
     !Number.isInteger(porcentaje_asistencia) ||
-    !inRangeInc(ponderacion_tareas, 0, 1) ||
-    !inRangeInc(ponderacion_quizzes, 0, 1) ||
-    !inRangeInc(ponderacion_examen_final, 0, 1)
-  ) {
-    return -1.0;
-  }
+    !between(porcentaje_asistencia, 0, 100) ||
+    !between(ponderacion_tareas, 0, 1) ||
+    !between(ponderacion_quizzes, 0, 1) ||
+    !between(ponderacion_examen_final, 0, 1)
+  ) return -1.0;
 
-  const suma = ponderacion_tareas + ponderacion_quizzes + ponderacion_examen_final;
-  const EPS = 1e-9;
-  if (Math.abs(1.0 - suma) > EPS) return -1.0;
+  const sum = ponderacion_tareas + ponderacion_quizzes + ponderacion_examen_final;
+  if (Math.abs(sum - 1) > 1e-9) return -1.0;
 
-  if (porcentaje_asistencia < 80) return 5.0;
-  if (calificacion_examen_final < 6.0) return 5.0;
+  if (porcentaje_asistencia < 80 || calificacion_examen_final < 6.0) return 5.0;
 
-  const resultado =
+  const result =
     promedio_tareas * ponderacion_tareas +
     promedio_quizzes * ponderacion_quizzes +
     calificacion_examen_final * ponderacion_examen_final;
 
-  return Math.round(resultado * 10) / 10; // 1 decimal
+  return Math.round(result * 10) / 10;
 }
 
 module.exports = { calcularCalificacionFinal };
